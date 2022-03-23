@@ -6,6 +6,10 @@ modules:
 - name: usermanagementapp-srv
   type: nodejs
   path: gen/srv
+  requires:
+  - name: usermanagementapp-connectivity
+  - name: usermanagementapp-destination-service
+  - name: uaa_usermanagementapp
   provides:
   - name: srv-api
     properties:
@@ -105,6 +109,11 @@ resources:
     service: xsuaa
     service-name: usermanagementapp-xsuaa-service
     service-plan: application
+- name: usermanagementapp-connectivity
+  type: org.cloudfoundry.managed-service
+  parameters:
+    service: connectivity
+    service-plan: lite
 parameters:
   deploy_mode: html5-repo
   enable-parallel-deployments: true

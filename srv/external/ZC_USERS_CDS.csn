@@ -1,0 +1,46 @@
+{
+  "meta": {
+    "creator": "cds-dk 4.8.2"
+  },
+  "$version": "2.0",
+  "definitions": {
+    "ZC_USERS_CDS": {
+      "kind": "service",
+      "@cds.external": true,
+      "@m.IsDefaultEntityContainer": "true",
+      "@sap.message.scope.supported": "true",
+      "@sap.supported.formats": "atom json xlsx"
+    },
+    "ZC_USERS_CDS.ZC_USERS": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.creatable": "false",
+      "@sap.updatable": "false",
+      "@sap.deletable": "false",
+      "@sap.content.version": "1",
+      "@sap.label": "Users View",
+      "elements": {
+        "bname": {
+          "key": true,
+          "type": "cds.String",
+          "length": 12,
+          "@sap.display.format": "UpperCase",
+          "@sap.label": "User",
+          "@sap.quickinfo": "User Name in User Master Record"
+        },
+        "name_text": {
+          "type": "cds.String",
+          "length": 80,
+          "@sap.label": "Full Name",
+          "@sap.quickinfo": "Full Name of Person"
+        },
+        "UIM_INFO": {
+          "type": "cds.LargeString",
+          "@sap.label": "UIM Info",
+          "@sap.visible": "false",
+          "@sap.updatable": "false"
+        }
+      }
+    }
+  }
+}

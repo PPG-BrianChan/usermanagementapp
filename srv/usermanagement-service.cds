@@ -1,5 +1,5 @@
 using usermanagementapp as uman from '../db/data-model';
-// using ZC_USERS_CDS as users_ext from './external/ZC_USERS_CDS.csn';
+using ZC_USERS_CDS as users_ext from './external/ZC_USERS_CDS.csn';
 
 service usermanagementapp_services {
     @Capabilities.Insertable : true
@@ -9,7 +9,7 @@ service usermanagementapp_services {
 
     @readonly
     // @requires : 'authenticated-user'
-    entity users as projection on uman.users {
+    entity users as projection on users_ext.ZC_USERS {
         key bname, name_text
     }
 }
