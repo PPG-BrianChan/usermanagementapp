@@ -1,24 +1,22 @@
 //Insert code here
 
 const cds = require('@sap/cds');
-
+const cdsapi = require('@sapmentors/cds-scp-api');
 
 module.exports = async function (srv) {
 
     const users = await cds.connect.to('ZC_USERS_CDS');
 
     srv.on('READ', 'users', async req => {
-        
         return users.run(req.query);
     });
 
     srv.before("CREATE", "incidents", async (req) => {
         console.log(`start of hook`);
-        console.log(srv.entities);
         const { incidents } = srv.entities;
         const query_get_ticketno = SELECT.one
-          .from(incidents)
-          .columns("max(ticket_no) as ticketno");
+            .from(incidents)
+            .columns("max(ticket_no) as ticketno");
         const result = await cds.run(query_get_ticketno);
         const jsonobj = JSON.parse(JSON.stringify(result));
         var ticketno = `${jsonobj.ticketno} + 1`;
@@ -26,9 +24,57 @@ module.exports = async function (srv) {
         req.data.status = `PENDING`;
         req.data.approverid = `K009287`;
     })
-    this.on('CREATE', 'incident', async (req, msg) => {
-        createwf(msg.data);
+
+    srv.after('CREATE', 'incidents', async (req, msg) => {
+        // createwf(msg.data);
+        console.log("Start of AFTER hook");
+        sendmail(msg.data);
     });
+};
+
+const sendmail = async (incident) => {
+    console.log("Incident Ticket No:", incident.ticket_no);
+    const mailcontent = {
+        message: {
+            subject: 'Approval request requiring your attention',
+            body: {
+                contentType: 'Text',
+                content: 'Kindly login to your workflow inbox to approve or reject the User management ticket, ${incident.ticketno}'
+            },
+            toRecipients: [
+                {
+                    emailAddress: {
+                        address: 'cchan@ppg.com'
+                    }
+                }
+            ],
+            from: {
+                emailAddress: {
+                    address: 'SAPCOEBTPGeneral@ppg.com'
+                }
+            }
+
+        },
+        saveToSentItems: 'true'
+    };
+
+    try {
+
+        const service = await cdsapi.connect.to("Microsoft_Graph_Mail_API");
+        return await service.run({
+            // url: "/v1.0/me/sendmail",
+            url: "/v1.0/users/${}/sendmail",
+            method: "post",
+            headers: {
+                'content-type': 'application/json'
+            },
+            data: mailcontent,
+        })
+    }
+
+    catch (error) {
+        console.log(error.message)
+    }
 };
 
 // const createwf = async (incident) => {

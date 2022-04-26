@@ -7,6 +7,7 @@
   "private": true,
   "dependencies": {
     "@sap/cds": "^5",
+    "@sapmentors/cds-scp-api": "^1.0.4",
     "express": "^4",
     "hdb": "^0.18.3"
   },
@@ -52,8 +53,8 @@
         "kind": "odata-v2",
         "model": "srv/external/ZC_USERS_CDS",
         "credentials": {
-          "destination": "PSD_HTTPS_TEST",
-          "path": "/sap/opu/odata/sap/ZC_USERS_CDS"
+            "destination": "PSD_HTTPS_TEST",
+            "path": "/sap/opu/odata/sap/ZC_USERS_CDS"
         }
       },
       "db": {
